@@ -1,270 +1,350 @@
 import { useState } from 'react';
-import { Sidebar, SidebarContent, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('editor');
-  const [code, setCode] = useState(`// Добро пожаловать в современный редактор!
-function helloWorld() {
-  console.log("Привет, мир!");
-  return "Это современный веб-редактор";
-}
+  const [prompt, setPrompt] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [selectedTemplate, setSelectedTemplate] = useState('landing');
+  const [generatedCode, setGeneratedCode] = useState('');
 
-// Автодополнение активно
-const editor = {
-  features: ["syntax-highlighting", "autocomplete", "smart-suggestions"],
-  theme: "modern-bright"
-};
-
-helloWorld();`);
-
-  const [suggestions, setSuggestions] = useState([
-    { text: 'console.log()', type: 'function' },
-    { text: 'const', type: 'keyword' },
-    { text: 'function', type: 'keyword' },
-    { text: 'return', type: 'keyword' }
-  ]);
-
-  const sidebarItems = [
-    { id: 'editor', icon: 'Code2', label: 'Редактор', active: true },
-    { id: 'settings', icon: 'Settings', label: 'Настройки' },
-    { id: 'docs', icon: 'FileText', label: 'Документы' },
-    { id: 'help', icon: 'HelpCircle', label: 'Помощь' }
+  const templates = [
+    { id: 'landing', name: 'Лендинг', icon: 'Rocket', description: 'Продающая посадочная страница' },
+    { id: 'portfolio', name: 'Портфолио', icon: 'User', description: 'Персональное портфолио' },
+    { id: 'blog', name: 'Блог', icon: 'FileText', description: 'Блог или новостной сайт' },
+    { id: 'ecommerce', name: 'Магазин', icon: 'ShoppingCart', description: 'Интернет-магазин' },
+    { id: 'corporate', name: 'Корпоративный', icon: 'Building', description: 'Сайт компании' },
+    { id: 'creative', name: 'Креативный', icon: 'Palette', description: 'Творческий проект' }
   ];
 
-  const handleCodeChange = (value: string) => {
-    setCode(value);
-    // Простая имитация автодополнения
-    const words = value.split(/\s+/);
-    const lastWord = words[words.length - 1];
+  const features = [
+    { icon: 'Brain', title: 'ИИ-Анализ', description: 'Умный анализ требований' },
+    { icon: 'Zap', title: 'Быстрая генерация', description: 'Сайт за 30 секунд' },
+    { icon: 'Smartphone', title: 'Адаптивность', description: 'Автоматическая мобильная версия' },
+    { icon: 'Sparkles', title: 'Современный дизайн', description: 'Актуальные тренды UX/UI' }
+  ];
+
+  const handleGenerate = async () => {
+    if (!prompt.trim()) return;
     
-    if (lastWord.length > 2) {
-      const filtered = [
-        { text: 'console.log()', type: 'function' },
-        { text: 'const', type: 'keyword' },
-        { text: 'function', type: 'keyword' },
-        { text: 'return', type: 'keyword' },
-        { text: 'getElementById', type: 'method' },
-        { text: 'addEventListener', type: 'method' }
-      ].filter(s => s.text.toLowerCase().includes(lastWord.toLowerCase()));
-      setSuggestions(filtered);
+    setIsGenerating(true);
+    setProgress(0);
+    
+    // Имитация процесса генерации
+    const steps = [
+      'Анализ требований...',
+      'Выбор компонентов...',
+      'Генерация дизайна...',
+      'Создание кода...',
+      'Оптимизация...',
+      'Финализация...'
+    ];
+    
+    for (let i = 0; i < steps.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setProgress((i + 1) * 16.67);
     }
+    
+    // Генерация простого кода
+    const template = templates.find(t => t.id === selectedTemplate);
+    setGeneratedCode(`// Сгенерированный сайт: ${template?.name}
+// Описание: ${prompt}
+
+import React from 'react';
+
+const GeneratedSite = () => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-blue-900">
+      <header className="p-8 text-center">
+        <h1 className="text-4xl font-bold text-white mb-4">
+          ${prompt.split(' ').slice(0, 3).join(' ')}
+        </h1>
+        <p className="text-gray-300">
+          Сайт создан с помощью ИИ
+        </p>
+      </header>
+      
+      <main className="container mx-auto p-8">
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Автоматически сгенерированные секции */}
+          <div className="bg-white/10 p-6 rounded-lg">
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Функция 1
+            </h3>
+            <p className="text-gray-300">
+              Описание функциональности
+            </p>
+          </div>
+          
+          <div className="bg-white/10 p-6 rounded-lg">
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Функция 2
+            </h3>
+            <p className="text-gray-300">
+              Описание функциональности
+            </p>
+          </div>
+          
+          <div className="bg-white/10 p-6 rounded-lg">
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Функция 3
+            </h3>
+            <p className="text-gray-300">
+              Описание функциональности
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default GeneratedSite;`);
+    
+    setIsGenerating(false);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-editor-bg via-gray-800 to-editor-panel">
-      <SidebarProvider>
-        <div className="flex w-full">
-          {/* Боковая панель */}
-          <Sidebar className="border-r border-editor-panel/50 bg-editor-bg/95 backdrop-blur-sm">
-            <SidebarContent className="p-4">
-              <div className="mb-6">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-editor-accent to-editor-success bg-clip-text text-transparent">
-                  EDITOR
+    <div className="min-h-screen bg-gradient-to-br from-ai-bg via-ai-panel to-ai-surface">
+      {/* Заголовок */}
+      <header className="border-b border-white/10 bg-black/20 backdrop-blur-sm">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-ai-primary to-ai-secondary rounded-lg flex items-center justify-center">
+                <Icon name="Brain" size={24} className="text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-ai-primary to-ai-secondary bg-clip-text text-transparent">
+                  AI Website Generator
                 </h1>
-                <p className="text-sm text-editor-text-muted">Современный веб-редактор</p>
+                <p className="text-sm text-gray-400">Нейросеть для создания сайтов</p>
               </div>
-              
-              <nav className="space-y-2">
-                {sidebarItems.map((item) => (
-                  <Button
-                    key={item.id}
-                    variant={activeTab === item.id ? "default" : "ghost"}
-                    className={`w-full justify-start transition-all duration-200 ${
-                      activeTab === item.id
-                        ? 'bg-gradient-to-r from-editor-accent to-blue-600 text-white shadow-lg'
-                        : 'text-editor-text-muted hover:text-editor-text hover:bg-editor-panel/50'
-                    }`}
-                    onClick={() => setActiveTab(item.id)}
-                  >
-                    <Icon name={item.icon as any} size={18} className="mr-3" />
-                    {item.label}
-                  </Button>
-                ))}
-              </nav>
-
-              <div className="mt-8 p-4 bg-gradient-to-br from-editor-accent/10 to-editor-success/10 rounded-lg border border-editor-accent/20">
-                <h3 className="font-semibold text-editor-text mb-2">Статистика</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-editor-text-muted">Строк кода:</span>
-                    <span className="text-editor-success font-medium">{code.split('\n').length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-editor-text-muted">Символов:</span>
-                    <span className="text-editor-accent font-medium">{code.length}</span>
-                  </div>
-                </div>
-              </div>
-            </SidebarContent>
-          </Sidebar>
-
-          {/* Основная область */}
-          <div className="flex-1 flex flex-col">
-            {/* Верхняя панель */}
-            <header className="bg-editor-panel/50 backdrop-blur-sm border-b border-editor-panel/50 p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <SidebarTrigger className="text-editor-text hover:text-editor-accent" />
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-editor-danger rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-editor-success rounded-full"></div>
-                  </div>
-                  <span className="text-editor-text font-medium">main.js</span>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="bg-editor-success/20 text-editor-success border-editor-success/30">
-                    Автосохранение
-                  </Badge>
-                  <Button size="sm" className="bg-gradient-to-r from-editor-accent to-blue-600">
-                    <Icon name="Play" size={16} className="mr-2" />
-                    Запустить
-                  </Button>
-                </div>
-              </div>
-            </header>
-
-            {/* Содержимое */}
-            <main className="flex-1 p-6">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full">
-                <TabsContent value="editor" className="mt-0 h-full">
-                  <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
-                    {/* Редактор кода */}
-                    <Card className="lg:col-span-3 bg-editor-panel/30 border-editor-panel/50 backdrop-blur-sm">
-                      <CardHeader className="border-b border-editor-panel/50">
-                        <CardTitle className="text-editor-text flex items-center gap-2">
-                          <Icon name="Code2" size={20} />
-                          Редактор кода
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-0">
-                        <div className="relative">
-                          <Textarea
-                            value={code}
-                            onChange={(e) => handleCodeChange(e.target.value)}
-                            className="min-h-[500px] code-font resize-none border-0 bg-transparent text-editor-text focus:ring-0 focus:outline-none p-6 leading-relaxed"
-                            placeholder="Начните печатать код..."
-                          />
-                          {/* Подсветка синтаксиса (имитация) */}
-                          <div className="absolute top-6 left-6 pointer-events-none text-transparent code-font leading-relaxed whitespace-pre-wrap">
-                            {code.replace(/\/\/.*$/gm, '').replace(/function|const|let|var|return/g, '')}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Панель автодополнения */}
-                    <Card className="bg-editor-panel/30 border-editor-panel/50 backdrop-blur-sm">
-                      <CardHeader className="border-b border-editor-panel/50">
-                        <CardTitle className="text-editor-text flex items-center gap-2">
-                          <Icon name="Lightbulb" size={20} />
-                          Умные подсказки
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4">
-                        <div className="space-y-2">
-                          {suggestions.map((suggestion, index) => (
-                            <button
-                              key={index}
-                              className="w-full text-left p-3 rounded-lg bg-editor-bg/50 hover:bg-editor-accent/20 transition-colors border border-editor-panel/30 hover:border-editor-accent/50"
-                              onClick={() => {
-                                const words = code.split(/\s+/);
-                                words[words.length - 1] = suggestion.text;
-                                setCode(words.join(' ') + ' ');
-                              }}
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="text-editor-text code-font">{suggestion.text}</span>
-                                <Badge
-                                  variant="outline"
-                                  className={`text-xs ${
-                                    suggestion.type === 'function' ? 'border-editor-success/50 text-editor-success' :
-                                    suggestion.type === 'keyword' ? 'border-editor-accent/50 text-editor-accent' :
-                                    'border-blue-500/50 text-blue-400'
-                                  }`}
-                                >
-                                  {suggestion.type}
-                                </Badge>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                        
-                        <div className="mt-6 p-4 bg-gradient-to-r from-editor-accent/10 to-blue-600/10 rounded-lg border border-editor-accent/20">
-                          <h4 className="font-semibold text-editor-text mb-2 flex items-center gap-2">
-                            <Icon name="Zap" size={16} />
-                            Быстрые команды
-                          </h4>
-                          <div className="space-y-1 text-sm">
-                            <div className="text-editor-text-muted">Ctrl+Space - Автодополнение</div>
-                            <div className="text-editor-text-muted">Ctrl+/ - Комментарий</div>
-                            <div className="text-editor-text-muted">Ctrl+S - Сохранить</div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="settings" className="mt-0">
-                  <Card className="bg-editor-panel/30 border-editor-panel/50 backdrop-blur-sm">
-                    <CardHeader>
-                      <CardTitle className="text-editor-text flex items-center gap-2">
-                        <Icon name="Settings" size={20} />
-                        Настройки редактора
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="text-editor-text-muted">
-                        Здесь будут настройки темы, размера шрифта, и других параметров редактора.
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                <TabsContent value="docs" className="mt-0">
-                  <Card className="bg-editor-panel/30 border-editor-panel/50 backdrop-blur-sm">
-                    <CardHeader>
-                      <CardTitle className="text-editor-text flex items-center gap-2">
-                        <Icon name="FileText" size={20} />
-                        Документация
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="text-editor-text-muted">
-                        Документация по использованию редактора и примеры кода.
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                <TabsContent value="help" className="mt-0">
-                  <Card className="bg-editor-panel/30 border-editor-panel/50 backdrop-blur-sm">
-                    <CardHeader>
-                      <CardTitle className="text-editor-text flex items-center gap-2">
-                        <Icon name="HelpCircle" size={20} />
-                        Помощь
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="text-editor-text-muted">
-                        Справочная информация и поддержка пользователей.
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </Tabs>
-            </main>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Badge className="bg-ai-accent/20 text-ai-accent border-ai-accent/30">
+                <Icon name="Sparkles" size={14} className="mr-1" />
+                Beta v2.0
+              </Badge>
+            </div>
           </div>
         </div>
-      </SidebarProvider>
+      </header>
+
+      <main className="container mx-auto px-6 py-8">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Панель ввода */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card className="bg-ai-panel/50 border-white/10 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Icon name="MessageSquare" size={20} />
+                  Опишите желаемый сайт
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Textarea
+                  placeholder="Например: Создай лендинг для IT-студии с современным дизайном, секциями услуг, портфолио и контактами. Используй синий и белый цвета."
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  className="min-h-[120px] bg-black/20 border-white/20 text-white placeholder-gray-400 focus:border-ai-primary"
+                />
+                
+                <div className="flex items-center justify-between">
+                  <div className="text-sm text-gray-400">
+                    {prompt.length}/500 символов
+                  </div>
+                  <Button 
+                    onClick={handleGenerate}
+                    disabled={!prompt.trim() || isGenerating}
+                    className="bg-gradient-to-r from-ai-primary to-ai-secondary hover:from-ai-primary/80 hover:to-ai-secondary/80"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Icon name="Loader2" size={16} className="mr-2 animate-spin" />
+                        Генерирую...
+                      </>
+                    ) : (
+                      <>
+                        <Icon name="Wand2" size={16} className="mr-2" />
+                        Создать сайт
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                {isGenerating && (
+                  <div className="space-y-2">
+                    <Progress value={progress} className="bg-black/20" />
+                    <div className="text-sm text-ai-primary">
+                      Обработка запроса... {Math.round(progress)}%
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Шаблоны */}
+            <Card className="bg-ai-panel/50 border-white/10 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Icon name="Layout" size={20} />
+                  Выберите тип сайта
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {templates.map((template) => (
+                    <button
+                      key={template.id}
+                      onClick={() => setSelectedTemplate(template.id)}
+                      className={`p-4 rounded-lg border-2 transition-all ${
+                        selectedTemplate === template.id
+                          ? 'border-ai-primary bg-ai-primary/20'
+                          : 'border-white/20 bg-black/20 hover:border-ai-primary/50'
+                      }`}
+                    >
+                      <Icon name={template.icon as any} size={24} className="text-ai-primary mb-2 mx-auto" />
+                      <div className="text-white font-medium text-sm">{template.name}</div>
+                      <div className="text-gray-400 text-xs mt-1">{template.description}</div>
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Результат */}
+            {generatedCode && (
+              <Card className="bg-ai-panel/50 border-white/10 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center gap-2">
+                    <Icon name="Code2" size={20} />
+                    Сгенерированный код
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Tabs defaultValue="preview" className="w-full">
+                    <TabsList className="bg-black/20 border-white/10">
+                      <TabsTrigger value="preview" className="text-white">Превью</TabsTrigger>
+                      <TabsTrigger value="code" className="text-white">Код</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="preview" className="mt-4">
+                      <div className="bg-black/20 rounded-lg p-6 border border-white/10">
+                        <div className="bg-gradient-to-br from-purple-900 to-blue-900 rounded-lg p-8 text-center">
+                          <h2 className="text-2xl font-bold text-white mb-4">
+                            {prompt.split(' ').slice(0, 3).join(' ')}
+                          </h2>
+                          <p className="text-gray-300 mb-6">Сайт создан с помощью ИИ</p>
+                          <div className="grid md:grid-cols-3 gap-4">
+                            {[1, 2, 3].map((i) => (
+                              <div key={i} className="bg-white/10 p-4 rounded-lg">
+                                <div className="w-8 h-8 bg-ai-primary rounded-full mx-auto mb-2"></div>
+                                <div className="text-white font-medium">Функция {i}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="code" className="mt-4">
+                      <div className="bg-black/40 rounded-lg p-4 border border-white/10">
+                        <pre className="text-sm text-gray-300 overflow-x-auto">
+                          <code>{generatedCode}</code>
+                        </pre>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Боковая панель */}
+          <div className="space-y-6">
+            {/* Возможности ИИ */}
+            <Card className="bg-ai-panel/50 border-white/10 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Icon name="Sparkles" size={20} />
+                  Возможности ИИ
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {features.map((feature, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-ai-primary to-ai-secondary rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Icon name={feature.icon as any} size={16} className="text-white" />
+                    </div>
+                    <div>
+                      <div className="text-white font-medium">{feature.title}</div>
+                      <div className="text-gray-400 text-sm">{feature.description}</div>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Статистика */}
+            <Card className="bg-ai-panel/50 border-white/10 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Icon name="BarChart3" size={20} />
+                  Статистика
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Сайтов создано:</span>
+                  <span className="text-ai-accent font-bold">1,247</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Активных пользователей:</span>
+                  <span className="text-ai-secondary font-bold">342</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Время генерации:</span>
+                  <span className="text-ai-primary font-bold">~28 сек</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Примеры промптов */}
+            <Card className="bg-ai-panel/50 border-white/10 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Icon name="Lightbulb" size={20} />
+                  Примеры описаний
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {[
+                  "Лендинг для фитнес-студии с расписанием и записью",
+                  "Портфолио дизайнера с галереей работ",
+                  "Сайт ресторана с меню и бронированием",
+                  "Блог о путешествиях с картой"
+                ].map((example, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setPrompt(example)}
+                    className="w-full text-left p-3 bg-black/20 rounded-lg hover:bg-black/40 transition-colors border border-white/10"
+                  >
+                    <div className="text-gray-300 text-sm">{example}</div>
+                  </button>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

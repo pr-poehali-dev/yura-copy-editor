@@ -68,7 +68,13 @@ export default {
 				'editor-success': '#10B981',
 				'editor-danger': '#EF4444',
 				'editor-text': '#F9FAFB',
-				'editor-text-muted': '#9CA3AF'
+				'editor-text-muted': '#9CA3AF',
+				'ai-primary': '#9b87f5',
+				'ai-secondary': '#0EA5E9',
+				'ai-accent': '#10B981',
+				'ai-bg': '#0F0F23',
+				'ai-panel': '#1A1A2E',
+				'ai-surface': '#16213E'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
