@@ -61,7 +61,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				'editor-bg': '#1F2937',
+				'editor-panel': '#374151',
+				'editor-accent': '#6366F1',
+				'editor-success': '#10B981',
+				'editor-danger': '#EF4444',
+				'editor-text': '#F9FAFB',
+				'editor-text-muted': '#9CA3AF'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
